@@ -9,3 +9,6 @@ out/
 
 
 .idea/
+
+#MacOS Finder indexing files
+.DS_Store
