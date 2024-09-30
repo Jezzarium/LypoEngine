@@ -26,11 +26,30 @@
 #include "platform/opengl/GLCheck.h"
 #include "stb_image.h"
 
+#include <string>
+#include "core/engine/argument_parser.h"
+
 unsigned int createBasicShader();
 unsigned int createTextureShader();
 
-int main(void)
+int main(int argc, char *argv[])
 {
+//    //DEBUG PARSER VALUES
+//    std::cout << "You have entered " << argc
+//         << " arguments:" << std::endl;
+//
+//    int i = 0;
+//    while (i < argc) {
+//        std::cout << "Argument " << i + 1 << ": " << argv[i]
+//                  << std::endl;
+//        i++;
+//    }
+
+    hive::ArgumentParser parser = hive::ArgumentParser(argc, argv, "SALUT CACAPIPIHAHAAHAHA");
+    parser.printArguments();
+
+
+
     auto window = hive::Window::create("Windows Window", 600, 700, hive::WindowFlags::DEFAULT);
 
 	int width, height;

@@ -7,6 +7,7 @@
 
 #include "core/window.h"
 #include "core/events/event_bus.h"
+#include "argument_parser.h"
 
 
 namespace hive {
@@ -24,6 +25,8 @@ namespace hive {
         void mainLoop();
 
         std::unique_ptr<Window> window;
+        const int argc = 0;
+        const char *argv[];
     };
 
 } // hive

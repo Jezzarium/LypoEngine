@@ -1,8 +1,8 @@
 //
 // Created by Justin Abourjaili-Bilodeau on 8/19/24.
 //
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 
 #include "engine.h"
 #include "core/events/event.h"
