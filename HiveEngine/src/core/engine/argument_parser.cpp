@@ -4,6 +4,7 @@
 
 #include "argument_parser.h"
 #include <filesystem>
+#include "core/logging/logger.h"
 
 namespace hive {
 
@@ -21,14 +22,32 @@ namespace hive {
               usage_(usage), description_(description), epilog_(epilog),
               parents_(parents), prefix_chars_(prefixChars), add_help_(addHelp), allow_abbrev_(allowAbbrev) {}
 
-    // DEBUG TEMP
+
+    void ArgumentParser::addArgument(const std::string &name,
+                                     std::optional<std::string> short_arg,
+                                     std::optional<std::string> long_arg,
+                                     std::string help,
+                                     bool required,
+                                     std::optional<std::string> default_value,
+                                     bool is_flag,
+                                     int nargs) {
+        Argument arg{name, short_arg, long_arg, help, required, default_value, is_flag, nargs};
+        arguments_.push_back(arg);
+    }
+
+
+
+
+
+
+
     void ArgumentParser::printArguments() {
         std::cout << *prog_ << std::endl;
 
-        std::cout << "There are " << argc_ << " command line arguments:" << std::endl;
+        Logger::log("There are " + std::to_string(argc_) + " command line arguments:", LogLevel::Info);
 
         for (int i = 0; i < argc_; ++i) {
-            std::cout << "Argument " << i + 1 << ": " << argv_[i] << std::endl;
+            Logger::log("Argument " + std::to_string(i + 1) + ": " + argv_[i], LogLevel::Info);
         }
     }
 } // hive

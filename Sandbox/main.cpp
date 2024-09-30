@@ -54,12 +54,14 @@ int main(int argc, char *argv[])
 //        i++;
 //    }
 
+    hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Info));
+
     hive::ArgumentParser parser = hive::ArgumentParser(argc, argv, "SALUT CACAPIPIHAHAAHAHA");
     parser.printArguments();
 
 
 
-	hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Info));
+
 
     auto window = hive::Window::create("Windows Window", 600, 700, hive::WindowFlags::DEFAULT);
 
