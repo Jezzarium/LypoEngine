@@ -40,7 +40,7 @@ namespace hive {
                          bool is_flag = false,
                          int nargs = 1);
         void parseArguments();
-        void printArguments();
+        bool checkArgument(const std::string &name);
 
     private:
         int argc_;
@@ -54,6 +54,7 @@ namespace hive {
         bool add_help_;
         bool allow_abbrev_;
         std::vector<Argument> arguments_;
+        std::unordered_map<std::string, std::string> parsed_arguments_;
     };
 
 } // hive

@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 //        i++;
 //    }
 
-    hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Info));
+    hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Debug));
 
     hive::ArgumentParser parser = hive::ArgumentParser(argc, argv, "SALUT CACAPIPIHAHAAHAHA");
     parser.printArguments();
