@@ -18,7 +18,12 @@ namespace hive
         public:
             GlfwWindow(const std::string &title, int width, int height, WindowConfiguration configuration);
 
+<<<<<<< HEAD
+            void onUpdate() override;
+            bool shouldClose() override;
+=======
             ~GlfwWindow() override;
+>>>>>>> HiveEngine/main
 
             [[nodiscard]] int getWidth() const override;
 

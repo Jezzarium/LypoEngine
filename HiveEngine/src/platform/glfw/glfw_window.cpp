@@ -4,6 +4,8 @@
 
 #include <glad/glad.h>
 #include "glfw_window.h"
+#include "core/events/event_bus.h"
+#include "core/events/window_event.h"
 
 
 #include "core/window/window_configuration.h"
@@ -35,9 +37,15 @@ namespace hive
         updateConfiguration(configuration);
     }
 
+<<<<<<< HEAD
+    void GlfwWindow::shutdown() noexcept
+    {
+        glfwDestroyWindow(p_data_impl_->window);
+=======
     GlfwWindow::~GlfwWindow() {
         Logger::log("Destructor GLFWWindow", LogLevel::Debug);
         glfwDestroyWindow(m_Window);
+>>>>>>> HiveEngine/main
         glfwTerminate();
     }
 
@@ -112,5 +120,9 @@ namespace hive
 
     bool GlfwWindow::shouldClose() const {
         return glfwWindowShouldClose(m_Window);
+    }
+
+    bool GlfwWindow::shouldClose() {
+        return glfwWindowShouldClose(reinterpret_cast<GLFWwindow*>(getNativeWindow()));
     }
 }

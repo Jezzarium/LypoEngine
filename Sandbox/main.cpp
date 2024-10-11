@@ -14,22 +14,48 @@
 
 #include "scene/scene.h"
 
+<<<<<<< HEAD
+#include <string>
+#include "core/engine/argument_parser.h"
+=======
 #include "core/Profiling/profiler.h"
 #include "core/rendering/orthographic_camera.h"
 #include "core/rendering/Texture.h"
 #include "GLFW/glfw3.h"
 #include "platform/opengl/opengl_shader.h"
+>>>>>>> HiveEngine/main
+
 
 unsigned int createBasicShader();
 unsigned int createTextureShader();
 
-int main(void)
+int main(int argc, char *argv[])
 {
+<<<<<<< HEAD
+//    //DEBUG PARSER VALUES
+//    std::cout << "You have entered " << argc
+//         << " arguments:" << std::endl;
+//
+//    int i = 0;
+//    while (i < argc) {
+//        std::cout << "Argument " << i + 1 << ": " << argv[i]
+//                  << std::endl;
+//        i++;
+//    }
+    //create engine instance
+    hive::Engine engine("Engine", 800, 600, argc, argv);
+    engine.run();
+
+
+
+
+
+=======
 	ENABLE_PROFILING;
 	hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Info));
+>>>>>>> HiveEngine/main
 
-    //Init Logging
-    hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Debug));
+    auto window = hive::Window::create("Windows Window", 600, 700, hive::WindowFlags::DEFAULT);
 
     //Init Window
     hive::WindowConfiguration configuration;
@@ -104,7 +130,7 @@ int main(void)
 
     textureShader->bind();
     textureShader->uploadUniformInt("u_Texture", 0);
-  
+
     // TEST ECS
 	hive::Scene scene = {};
 	hive::Entity entity = scene.createEntity("Test");
