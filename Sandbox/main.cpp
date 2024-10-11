@@ -25,6 +25,7 @@
 #include "platform/opengl/opengl_shader.h"
 >>>>>>> HiveEngine/main
 
+
 unsigned int createBasicShader();
 unsigned int createTextureShader();
 
@@ -41,11 +42,10 @@ int main(int argc, char *argv[])
 //                  << std::endl;
 //        i++;
 //    }
+    //create engine instance
+    hive::Engine engine("Engine", 800, 600, argc, argv);
+    engine.run();
 
-    hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Debug));
-
-    hive::ArgumentParser parser = hive::ArgumentParser(argc, argv, "SALUT CACAPIPIHAHAAHAHA");
-    parser.printArguments();
 
 
 
@@ -55,8 +55,7 @@ int main(int argc, char *argv[])
 	hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Info));
 >>>>>>> HiveEngine/main
 
-    //Init Logging
-    hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Debug));
+    auto window = hive::Window::create("Windows Window", 600, 700, hive::WindowFlags::DEFAULT);
 
     //Init Window
     hive::WindowConfiguration configuration;
@@ -131,7 +130,7 @@ int main(int argc, char *argv[])
 
     textureShader->bind();
     textureShader->uploadUniformInt("u_Texture", 0);
-  
+
     // TEST ECS
 	hive::Scene scene = {};
 	hive::Entity entity = scene.createEntity("Test");
