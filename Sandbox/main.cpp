@@ -1,48 +1,36 @@
-//
-// Created by samuel on 8/30/24.
-//
-//
-// Created by lapor on 7/19/2024.
-//
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <memory>
+#include <core/rendering/Renderer.hpp>
+#include <core/rendering/VertexArray.hpp>
 
-#include "core/window.h"
-#include "core/mouse.h"
-
-#include <iostream>
-
-#include "core/rendering/VertexBuffer.hpp"
-#include "core/rendering/IndexBuffer.hpp"
-#include "core/rendering/VertexArray.hpp"
-#include "core/rendering/BufferUtils.h"
-#include "core/rendering/Texture.h"
-#include "core/rendering/shader.h"
-#include "core/rendering/Renderer.hpp"
-#include "core/rendering/orthographic_camera.h"
-
-#include "core/events/event_bus.h"
-
-#include "platform/opengl/opengl_shader.h"
-#include "platform/opengl/GLCheck.h"
-#include "stb_image.h"
-#include "core/logging/ConsoleLogger.h"
+#include "core/inputs/input.h"
 #include "core/logging/Logger.h"
 #include "core/logging/LoggingFactory.h"
+#include "core/window/window.h"
+#include "core/window/window_configuration.h"
+#include "core/window/window_factory.h"
 
 #include "scene/components.h"
 #include "scene/entity.h"
 
 #include "scene/scene.h"
 
+<<<<<<< HEAD
 #include <string>
 #include "core/engine/argument_parser.h"
+=======
+#include "core/Profiling/profiler.h"
+#include "core/rendering/orthographic_camera.h"
+#include "core/rendering/Texture.h"
+#include "GLFW/glfw3.h"
+#include "platform/opengl/opengl_shader.h"
+>>>>>>> HiveEngine/main
 
 unsigned int createBasicShader();
 unsigned int createTextureShader();
 
 int main(int argc, char *argv[])
 {
+<<<<<<< HEAD
 //    //DEBUG PARSER VALUES
 //    std::cout << "You have entered " << argc
 //         << " arguments:" << std::endl;
@@ -62,23 +50,25 @@ int main(int argc, char *argv[])
 
 
 
+=======
+	ENABLE_PROFILING;
+	hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Info));
+>>>>>>> HiveEngine/main
 
-    auto window = hive::Window::create("Windows Window", 600, 700, hive::WindowFlags::DEFAULT);
+    //Init Logging
+    hive::Logger::setLogger(hive::LoggingFactory::createLogger(hive::LogOutputType::Console, hive::LogLevel::Debug));
 
-	int width, height;
-	auto data = stbi_load("../HiveEngine/assets/icon.png", &width, &height, nullptr, 0);
-	window->setWindowIcon(data, width, height);
+    //Init Window
+    hive::WindowConfiguration configuration;
+    configuration.set(hive::WindowConfigurationOptions::CURSOR_DISABLED, true);
+    const auto window = std::unique_ptr<hive::Window>(hive::WindowFactory::Create("Hive Engine", 800, 600, configuration));
 
-    auto mouse = hive::Mouse::create(window->getNativeWindow());
+    //Init Input
+    hive::Input::init(window->getNativeWindow());
 
-    //from learnopengl.com
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /*unsigned int shaderProgram = createBasicShader();
     unsigned int textureShader = createTextureShader();*/
-
     hive::OrthographicCamera m_Camera(-1.0f, 1.0f, -1.0f, 1.0f);
 
     std::string fragmentPath = "../HiveEngine/assets/shaders/basicColorShader.frag.glsl";
@@ -143,19 +133,21 @@ int main(int argc, char *argv[])
     textureShader->uploadUniformInt("u_Texture", 0);
   
     // TEST ECS
-	  hive::Scene scene = {};
-	  hive::Entity entity = scene.createEntity("Test");
-	  hive::Entity entity_no_name = scene.createEntity();
-	  std::cout << entity.toString() << std::endl;
-	  std::cout << entity_no_name.toString() << std::endl;
-	  auto& tag = entity_no_name.replaceComponent<hive::TagComponent>();
-	  tag.Tag = "Replace";
-	  std::cout << scene.toString() << std::endl;
-    float angle = 0.0f;
+	hive::Scene scene = {};
+	hive::Entity entity = scene.createEntity("Test");
+	hive::Entity entity_no_name = scene.createEntity();
+	std::cout << entity.toString() << std::endl;
+	std::cout << entity_no_name.toString() << std::endl;
+	auto& tag = entity_no_name.replaceComponent<hive::TagComponent>();
+	tag.Tag = "Replace";
+	std::cout << scene.toString() << std::endl;
   
+    float angle = 0.0f;
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(reinterpret_cast<GLFWwindow*>(window->getNativeWindow())))
     {
+    	BLOCK_PROFILING("BLOCK TEST", hive::BlockStatus::ON, hive::colors::Green);
         angle += 0.5f;
 
         m_Camera.setPosition({ 0.5f, 0.0f, 0.0f });
@@ -172,15 +164,10 @@ int main(int argc, char *argv[])
 
 
         /* Poll for and process events */
-        double xpos, ypos;
-        mouse->getPosition(xpos, ypos);
-
-        if (mouse->isButtonPressed(hive::ButtonValue::BUTTON_RIGHT))
-        {
-            std::cout << " Right mouse button pressed" << std::endl;
-        }
         window->onUpdate();
+    	END_BLOCK_PROFILING;
     }
+	DUMP_PROFILING("test.prof");
+    hive::Input::shutdown();
     return 0;
 }
-
