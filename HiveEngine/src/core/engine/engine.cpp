@@ -33,7 +33,7 @@ namespace hive {
 
     void Engine::init() {
         ArgumentParser parser = ArgumentParser(argc, argv, "-", true);
-        auto debugArg = parser.addArgument("debug", 1, "d", "debug");
+        auto debugArg = parser.addArgument("debug", 0, "d", "debug");
         parser.parseArguments();
 
         // Checking --debug or -d for Logger

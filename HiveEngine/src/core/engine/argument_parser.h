@@ -11,8 +11,8 @@ namespace hive {
         struct Argument {
             std::string name;
             int nArgs;
-            std::string short_arg;
-            std::string long_arg;
+            std::string shortArg;
+            std::string longArg;
         };
         ArgumentParser(int argc, char **argv, std::string prefixChar = "-", bool allowAbbrev = true);
         Argument addArgument(const std::string &name,int nargs = 0, const std::string& short_arg = "", const std::string& long_arg = "");
@@ -24,9 +24,9 @@ namespace hive {
         char **argv_;
         std::string prog_;
         std::string prefix_char_;
-        bool allow_abbrev_;
+        bool allowAbbrev_;
         std::vector<Argument> arguments_;
-        std::unordered_map<std::string, std::vector<std::string>> parsed_arguments_;
+        std::unordered_map<std::string, std::vector<std::string>> parsedArguments_;
     };
 } // hive
 

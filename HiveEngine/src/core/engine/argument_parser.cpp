@@ -7,7 +7,7 @@
 
 namespace hive {
     ArgumentParser::ArgumentParser(int argc, char **argv, std::string prefixChar, bool allowAbbrev)
-            : argc_(argc), argv_(argv), prefix_char_(prefixChar), allow_abbrev_(allowAbbrev) {
+            : argc_(argc), argv_(argv), prefix_char_(prefixChar), allowAbbrev_(allowAbbrev) {
 
         if(prefixChar.length() != 1) {
             throw std::invalid_argument("Prefix character must be a single character (" + prog_ + ").");
@@ -25,10 +25,10 @@ namespace hive {
             if (arg.name == name) {
                 throw std::invalid_argument("Cannot add duplicate argument '" + name + "' (parser of " + prog_ + ").");
             }
-            if (arg.short_arg == actual_short_arg) {
+            if (arg.shortArg == actual_short_arg) {
                 throw std::invalid_argument("Cannot add duplicate short argument '" + actual_short_arg + "' to parser of " + prog_ + ".");
             }
-            if (arg.long_arg == actual_long_arg) {
+            if (arg.longArg == actual_long_arg) {
                 throw std::invalid_argument("Cannot add duplicate long argument '" + actual_long_arg + "' to parser of " + prog_ + ".");
             }
         }
@@ -62,15 +62,15 @@ namespace hive {
                     break;
                 case ParseState::Argument:
                     for(const Argument& arg : arguments_) {
-                        if ((std::string(argv_[argIndex]) == "-" + arg.short_arg and allow_abbrev_) or std::string(argv_[argIndex]) == "--" + arg.long_arg) {
-                            parsed_arguments_.emplace(arg.name, std::vector<std::string>{});
+                        if ((std::string(argv_[argIndex]) == prefix_char_[0] + arg.shortArg and allowAbbrev_) or std::string(argv_[argIndex]) == prefix_char_ + prefix_char_ + arg.longArg) {
+                            parsedArguments_.emplace(arg.name, std::vector<std::string>{});
                             previousArg = arg;
                             foundArg = true;
                         }
                     }
                     if (!foundArg) {
                         std::string currentArg = std::string(argv_[argIndex]);
-                        if (currentArg[0] == '-' && currentArg[1] != '-' && currentArg.length() > 2) {
+                        if (currentArg[0] == prefix_char_[0] && currentArg[1] != prefix_char_[0] && currentArg.length() > 2) {
                             throw std::invalid_argument("Invalid short argument: " + currentArg + " (" + prog_ + "). Short arguments must be a single character after a single '-'.");
                         }
                         throw std::invalid_argument("Unrecognized argument: " + currentArg + " (" + prog_ + ").");
@@ -88,11 +88,11 @@ namespace hive {
                         throw std::out_of_range("Argument -" + previousArg.name + " does not take any values (" + prog_ + ").");
                     }
 
-                    if (parsed_arguments_[previousArg.name].size() >= previousArg.nArgs) {
+                    if (parsedArguments_[previousArg.name].size() >= previousArg.nArgs) {
                         throw std::out_of_range("Too many arguments provided for -" + previousArg.name + " (" + prog_ + ").");
                     }
 
-                    parsed_arguments_[previousArg.name].emplace_back(argv_[argIndex]);
+                    parsedArguments_[previousArg.name].emplace_back(argv_[argIndex]);
                     currentState = ParseState::Start;
                     ++argIndex;
                     break;
@@ -101,14 +101,14 @@ namespace hive {
     }
 
     bool ArgumentParser::checkArgument(const std::string &name) {
-        if (parsed_arguments_.find(name) != parsed_arguments_.end()) {
+        if (parsedArguments_.find(name) != parsedArguments_.end()) {
             return true;
         }
         return false;
     }
 
     bool ArgumentParser::checkArgument(const ArgumentParser::Argument &arg) {
-        if (parsed_arguments_.find(arg.name) != parsed_arguments_.end()) {
+        if (parsedArguments_.find(arg.name) != parsedArguments_.end()) {
             return true;
         }
         return false;
