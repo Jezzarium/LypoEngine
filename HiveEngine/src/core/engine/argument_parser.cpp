@@ -3,7 +3,6 @@
 //
 
 #include "argument_parser.h"
-#include <utility>
 #include <filesystem>
 
 namespace hive {
@@ -15,12 +14,6 @@ namespace hive {
         }
 
         prog_ = std::filesystem::path(argv_[0]).filename().string();
-
-        //debug shows raw arguments from command line (cannot use Logger because it is not initialized yet)
-//        std::cout << "There are " + std::to_string(argc_) + " command line arguments:" << std::endl;
-//        for (int i = 0; i < argc_; ++i) {
-//            std::cout << ("Argument " + std::to_string(i + 1) + ": " + argv_[i]) << std::endl;
-//        }
     }
 
     ArgumentParser::Argument ArgumentParser::addArgument(const std::string &name, int nargs, const std::string& short_arg,

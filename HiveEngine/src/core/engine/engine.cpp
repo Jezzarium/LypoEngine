@@ -1,12 +1,10 @@
 //
 // Created by Justin Abourjaili-Bilodeau on 8/19/24.
 //
-#include <filesystem>
-
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
-
 #include "engine.h"
+
+#include <filesystem>
+#include "glad/glad.h"
 
 #include "core/logging/Logger.h"
 #include "core/logging/LoggingFactory.h"
@@ -25,7 +23,6 @@ namespace hive {
             std::cerr << "Failed to initialize engine: " <<  e.what() << std::endl;
             std::exit(EXIT_FAILURE);
         }
-
         Logger::log("Engine has successfully initialized", LogLevel::Info);
         Logger::log("Currently running: " + std::filesystem::path(argv[0]).filename().string(), LogLevel::Info);
     }

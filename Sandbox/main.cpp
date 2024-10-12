@@ -32,9 +32,10 @@ unsigned int createTextureShader();
 
 int main(int argc, char *argv[])
 {
-    //create engine instance
+    //Create engine instance
     hive::Engine engine(argc, argv);
     engine.run();
+
 
     //Init Window
     hive::WindowConfiguration configuration;
@@ -43,7 +44,6 @@ int main(int argc, char *argv[])
 
     //Init Input
     hive::Input::init(window->getNativeWindow());
-
 
     /*unsigned int shaderProgram = createBasicShader();
     unsigned int textureShader = createTextureShader();*/

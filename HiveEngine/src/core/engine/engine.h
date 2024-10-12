@@ -5,7 +5,6 @@
 #ifndef LYPO_ENGINE_ENGINE_H
 #define LYPO_ENGINE_ENGINE_H
 
-#include "core/events/event_bus.h"
 #include "argument_parser.h"
 #include "core/window/window_factory.h"
 

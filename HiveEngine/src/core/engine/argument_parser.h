@@ -5,13 +5,7 @@
 #ifndef SANDBOX_ARGUMENT_PARSER_H
 #define SANDBOX_ARGUMENT_PARSER_H
 
-#include <string>
-#include <vector>
-#include <memory>
-#include <optional>
-
 namespace hive {
-
     class ArgumentParser {
     public:
         struct Argument {
@@ -20,16 +14,12 @@ namespace hive {
             std::string short_arg;
             std::string long_arg;
         };
-
         ArgumentParser(int argc, char **argv, std::string prefixChar = "-", bool allowAbbrev = true);
         Argument addArgument(const std::string &name,int nargs = 0, const std::string& short_arg = "", const std::string& long_arg = "");
         void parseArguments();
         bool checkArgument(const std::string &name);
         bool checkArgument(const Argument &arg);
-
     private:
-        std::string helpMessage();
-
         int argc_;
         char **argv_;
         std::string prog_;
@@ -38,7 +28,6 @@ namespace hive {
         std::vector<Argument> arguments_;
         std::unordered_map<std::string, std::vector<std::string>> parsed_arguments_;
     };
-
 } // hive
 
 #endif // SANDBOX_ARGUMENT_PARSER_H
