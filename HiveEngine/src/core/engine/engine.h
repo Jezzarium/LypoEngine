@@ -5,16 +5,15 @@
 #ifndef LYPO_ENGINE_ENGINE_H
 #define LYPO_ENGINE_ENGINE_H
 
-#include "core/window.h"
 #include "core/events/event_bus.h"
 #include "argument_parser.h"
+#include "core/window/window_factory.h"
 
 namespace hive {
 
     class Engine {
     public:
-        Engine(const std::string &title, const uint32_t &width, const uint32_t &height,
-               const int& argc, char *argv[], const WindowFlags &flag = WindowFlags::DEFAULT);
+        Engine(const int& argc, char *argv[]);
         ~Engine();
 
         void run();
