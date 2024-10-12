@@ -7,15 +7,8 @@
 #include <filesystem>
 
 namespace hive {
-    ArgumentParser::ArgumentParser(int argc, char **argv,
-                                   std::string prefixChar,
-                                   bool addHelp,
-                                   bool allowAbbrev,
-                                   std::string_view usage,
-                                   std::string_view description,
-                                   std::string_view epilog)
-            : argc_(argc), argv_(argv), prefix_char_(prefixChar), add_help_(addHelp),
-              allow_abbrev_(allowAbbrev), usage_(usage), description_(description), epilog_(epilog) {
+    ArgumentParser::ArgumentParser(int argc, char **argv, std::string prefixChar, bool allowAbbrev)
+            : argc_(argc), argv_(argv), prefix_char_(prefixChar), allow_abbrev_(allowAbbrev) {
 
         if(prefixChar.length() != 1) {
             throw std::invalid_argument("Prefix character must be a single character (" + prog_ + ").");
@@ -23,7 +16,7 @@ namespace hive {
 
         prog_ = std::filesystem::path(argv_[0]).filename().string();
 
-        //debug (cannot use Logger because it is not initialized yet)
+        //debug shows raw arguments from command line (cannot use Logger because it is not initialized yet)
 //        std::cout << "There are " + std::to_string(argc_) + " command line arguments:" << std::endl;
 //        for (int i = 0; i < argc_; ++i) {
 //            std::cout << ("Argument " + std::to_string(i + 1) + ": " + argv_[i]) << std::endl;
@@ -31,7 +24,7 @@ namespace hive {
     }
 
     ArgumentParser::Argument ArgumentParser::addArgument(const std::string &name, int nargs, const std::string& short_arg,
-                                                         const std::string& long_arg, std::string help) {
+                                                         const std::string& long_arg) {
         std::string actual_short_arg = short_arg.empty() ? std::string(1, name[0]) : short_arg;
         std::string actual_long_arg = long_arg.empty() ? name : long_arg;
 
@@ -46,7 +39,7 @@ namespace hive {
                 throw std::invalid_argument("Cannot add duplicate long argument '" + actual_long_arg + "' to parser of " + prog_ + ".");
             }
         }
-        Argument arg{name,nargs,actual_short_arg,actual_long_arg,std::move(help)};
+        Argument arg{name,nargs,actual_short_arg,actual_long_arg};
         arguments_.push_back(arg);
 
         return arg;
@@ -76,7 +69,7 @@ namespace hive {
                     break;
                 case ParseState::Argument:
                     for(const Argument& arg : arguments_) {
-                        if (std::string(argv_[argIndex]) == "-" + arg.short_arg or std::string(argv_[argIndex]) == "--" + arg.long_arg) {
+                        if ((std::string(argv_[argIndex]) == "-" + arg.short_arg and allow_abbrev_) or std::string(argv_[argIndex]) == "--" + arg.long_arg) {
                             parsed_arguments_.emplace(arg.name, std::vector<std::string>{});
                             previousArg = arg;
                             foundArg = true;
@@ -127,16 +120,4 @@ namespace hive {
         }
         return false;
     }
-
-    std::string ArgumentParser::helpMessage() {
-        std::string help = "Usage: " + prog_ + " " + usage_ + "\n";
-        help += description_ + "\n";
-        help += "Arguments:\n";
-        for (const auto& arg : arguments_) {
-            help += "  " + arg.short_arg + ", " + arg.long_arg + " " + arg.help + "\n";
-        }
-        help += epilog_;
-        return help;
-    }
-
 } // hive

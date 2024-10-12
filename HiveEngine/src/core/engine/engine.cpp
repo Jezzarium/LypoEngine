@@ -31,30 +31,27 @@ namespace hive {
     }
 
     Engine::~Engine() {
-        // Proper cleanup logic if necessary
+
     }
 
     void Engine::init() {
-        // Window configuration logic moved to init()
-        WindowConfiguration configuration;
-        configuration.set(WindowConfigurationOptions::CURSOR_DISABLED, true);
-        window = std::unique_ptr<Window>(WindowFactory::Create("Hive Engine", 800, 600, configuration));
-
-        ArgumentParser parser = ArgumentParser(argc, argv);
-        auto debugArg = parser.addArgument("debug", 1, "d", "debug", "Enable debug mode");
-        auto testArg = parser.addArgument("u", 0);
+        ArgumentParser parser = ArgumentParser(argc, argv, "-", true);
+        auto debugArg = parser.addArgument("debug", 1, "d", "debug");
         parser.parseArguments();
 
-        // Checking --debug or -d arguments
+        // Checking --debug or -d for Logger
         if (parser.checkArgument(debugArg)) {
             Logger::setLogger(LoggingFactory::createLogger(LogOutputType::Console, LogLevel::Debug));
         } else {
             Logger::setLogger(LoggingFactory::createLogger(LogOutputType::Console, LogLevel::Info));
         }
 
-        if (parser.checkArgument("u")) {
-            Logger::log("Test argument 2 found", LogLevel::Debug);
-        }
+        Logger::log("This should only print if the debug argument was given.", LogLevel::Debug);
+
+        // Init Window
+        WindowConfiguration configuration;
+        configuration.set(WindowConfigurationOptions::CURSOR_DISABLED, true);
+        window = std::unique_ptr<Window>(WindowFactory::Create("Hive Engine", 800, 600, configuration));
 
         // Init Input
         hive::Input::init(window->getNativeWindow());
