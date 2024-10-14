@@ -19,6 +19,7 @@ namespace hive {
         void parseArguments();
         bool checkArgument(const std::string &name);
         bool checkArgument(const Argument &arg);
+        std::vector<std::string> getArgumentValues(const std::string &name);
     private:
         int argc_;
         char **argv_;

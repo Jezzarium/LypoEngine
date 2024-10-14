@@ -49,15 +49,20 @@ namespace hive {
         int argIndex = 1;
         Argument previousArg;
         bool foundArg = false;
+        int valuesLeft = 0;
 
 
         while (argIndex < argc_) {
             switch (currentState) {
                 case ParseState::Start:
                     if (argv_[argIndex][0] == prefix_char_[0]) {
+                        if (valuesLeft > 0) {
+                            throw std::out_of_range("Too few arguments provided for -" + previousArg.name + ". Missing " + std::to_string(valuesLeft) + " arguments (" + prog_ + ").");
+                        }
                         currentState = ParseState::Argument;
                     } else {
                         currentState = ParseState::Value;
+                        valuesLeft--;
                     }
                     break;
                 case ParseState::Argument:
@@ -65,6 +70,7 @@ namespace hive {
                         if ((std::string(argv_[argIndex]) == prefix_char_[0] + arg.shortArg and allowAbbrev_) or std::string(argv_[argIndex]) == prefix_char_ + prefix_char_ + arg.longArg) {
                             parsedArguments_.emplace(arg.name, std::vector<std::string>{});
                             previousArg = arg;
+                            valuesLeft = arg.nArgs;
                             foundArg = true;
                         }
                     }
@@ -98,19 +104,23 @@ namespace hive {
                     break;
             }
         }
+        if (valuesLeft > 0) {
+            throw std::out_of_range("Too few arguments provided for -" + previousArg.name + ". Missing " + std::to_string(valuesLeft) + " arguments (" + prog_ + ").");
+        }
     }
 
     bool ArgumentParser::checkArgument(const std::string &name) {
-        if (parsedArguments_.find(name) != parsedArguments_.end()) {
-            return true;
-        }
-        return false;
+        return parsedArguments_.find(name) != parsedArguments_.end();
     }
 
     bool ArgumentParser::checkArgument(const ArgumentParser::Argument &arg) {
-        if (parsedArguments_.find(arg.name) != parsedArguments_.end()) {
-            return true;
+        return parsedArguments_.find(arg.name) != parsedArguments_.end();
+    }
+
+    std::vector<std::string> ArgumentParser::getArgumentValues(const std::string &name) {
+        if (parsedArguments_.find(name) != parsedArguments_.end()) {
+            return parsedArguments_[name];
         }
-        return false;
+        return {};
     }
 } // hive

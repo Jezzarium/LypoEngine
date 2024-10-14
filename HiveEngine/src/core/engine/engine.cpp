@@ -34,6 +34,7 @@ namespace hive {
     void Engine::init() {
         ArgumentParser parser = ArgumentParser(argc, argv, "-", true);
         auto debugArg = parser.addArgument("debug", 0, "d", "debug");
+        auto testArg = parser.addArgument("test", 2, "t", "test");
         parser.parseArguments();
 
         // Checking --debug or -d for Logger
@@ -43,7 +44,14 @@ namespace hive {
             Logger::setLogger(LoggingFactory::createLogger(LogOutputType::Console, LogLevel::Info));
         }
 
-        Logger::log("This should only print if the debug argument was given.", LogLevel::Debug);
+        Logger::log("This should only print if the debug argument was given:", LogLevel::Debug);
+
+        if (parser.checkArgument(testArg)) {
+            auto values = parser.getArgumentValues("test");
+            for (const auto& value : values) {
+                Logger::log("-" + value, LogLevel::Debug);
+            }
+        }
 
         // Init Window
         WindowConfiguration configuration;
