@@ -19,13 +19,24 @@ namespace hive {
     Engine::Engine(const int& argc, char *argv[]) : argc(argc), argv(argv) {
         try {
             init();
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Failed to initialize engine (invalid_argument): " << e.what() << std::endl;
+            std::exit(EXIT_FAILURE);
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Failed to initialize engine (out_of_range): " << e.what() << std::endl;
+            std::exit(EXIT_FAILURE);
         } catch (const std::logic_error& e) {
-            std::cerr << "Failed to initialize engine: " <<  e.what() << std::endl;
+            std::cerr << "Failed to initialize engine (logic_error): " << e.what() << std::endl;
+            std::exit(EXIT_FAILURE);
+        } catch (const std::exception& e) {
+            std::cerr << "Failed to initialize engine (exception): " << e.what() << std::endl;
             std::exit(EXIT_FAILURE);
         }
+
         Logger::log("Engine has successfully initialized", LogLevel::Info);
         Logger::log("Currently running: " + std::filesystem::path(argv[0]).filename().string(), LogLevel::Info);
     }
+
 
     Engine::~Engine() {
 
@@ -33,8 +44,8 @@ namespace hive {
 
     void Engine::init() {
         ArgumentParser parser = ArgumentParser(argc, argv, "-", true);
-        auto debugArg = parser.addArgument("debug", 0, "d", "debug");
-        auto testArg = parser.addArgument("test", 2, "t", "test");
+        auto debugArg = parser.addArgument("debug", 0);
+        auto testArg = parser.addArgument("test", 1, "int");
         parser.parseArguments();
 
         // Checking --debug or -d for Logger
@@ -47,9 +58,9 @@ namespace hive {
         Logger::log("This should only print if the debug argument was given:", LogLevel::Debug);
 
         if (parser.checkArgument(testArg)) {
-            auto values = parser.getArgumentValues("test");
+            auto values = parser.getIntValues(testArg);
             for (const auto& value : values) {
-                Logger::log("-" + value, LogLevel::Debug);
+                Logger::log(std::to_string(value), LogLevel::Debug);
             }
         }
 

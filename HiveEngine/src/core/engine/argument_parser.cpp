@@ -6,7 +6,7 @@
 #include <filesystem>
 
 namespace hive {
-    ArgumentParser::ArgumentParser(int argc, char **argv, std::string prefixChar, bool allowAbbrev)
+    ArgumentParser::ArgumentParser(int argc, char **argv, const std::string& prefixChar, bool allowAbbrev)
             : argc_(argc), argv_(argv), prefix_char_(prefixChar), allowAbbrev_(allowAbbrev) {
 
         if(prefixChar.length() != 1) {
@@ -16,8 +16,12 @@ namespace hive {
         prog_ = std::filesystem::path(argv_[0]).filename().string();
     }
 
-    ArgumentParser::Argument ArgumentParser::addArgument(const std::string &name, int nargs, const std::string& short_arg,
+    ArgumentParser::Argument ArgumentParser::addArgument(const std::string &name, int nargs, const std::string& type, const std::string& short_arg,
                                                          const std::string& long_arg) {
+        if (name.empty()) {
+            throw std::invalid_argument("Cannot add Argument without a name (" + prog_ + ").");
+        }
+
         std::string actual_short_arg = short_arg.empty() ? std::string(1, name[0]) : short_arg;
         std::string actual_long_arg = long_arg.empty() ? name : long_arg;
 
@@ -32,7 +36,7 @@ namespace hive {
                 throw std::invalid_argument("Cannot add duplicate long argument '" + actual_long_arg + "' to parser of " + prog_ + ".");
             }
         }
-        Argument arg{name,nargs,actual_short_arg,actual_long_arg};
+        Argument arg{name,nargs, type,actual_short_arg,actual_long_arg};
         arguments_.push_back(arg);
 
         return arg;
@@ -109,18 +113,69 @@ namespace hive {
         }
     }
 
-    bool ArgumentParser::checkArgument(const std::string &name) {
-        return parsedArguments_.find(name) != parsedArguments_.end();
-    }
+//    bool ArgumentParser::checkArgument(const std::string &name) {
+//        return parsedArguments_.find(name) != parsedArguments_.end();
+//    }
 
     bool ArgumentParser::checkArgument(const ArgumentParser::Argument &arg) {
         return parsedArguments_.find(arg.name) != parsedArguments_.end();
     }
 
-    std::vector<std::string> ArgumentParser::getArgumentValues(const std::string &name) {
-        if (parsedArguments_.find(name) != parsedArguments_.end()) {
-            return parsedArguments_[name];
+//    std::vector<std::string> ArgumentParser::getStringValues(const std::string &name) {
+//        if (parsedArguments_.find(name) != parsedArguments_.end()) {
+//            return parsedArguments_[name];
+//        }
+//        return {};
+//    }
+
+    std::vector<std::string> ArgumentParser::getStringValues(const ArgumentParser::Argument &arg, bool ignoreType) {
+        if (parsedArguments_.find(arg.name) != parsedArguments_.end()) {
+            if (arg.type == "string" or ignoreType) {
+                return parsedArguments_[arg.name];
+            } else {
+                throw std::invalid_argument("Argument " + arg.name + " is not of type string (" + prog_ + ").");
+            }
         }
         return {};
     }
+
+//    std::vector<int> ArgumentParser::getIntValues(const std::string &name) {
+//        std::vector<int> values;
+//        for (const auto& value : getStringValues(name)) {
+//            values.push_back(std::stoi(value));
+//        }
+//        return values;
+//    }
+
+    std::vector<int> ArgumentParser::getIntValues(const ArgumentParser::Argument &arg) {
+        std::vector<int> values;
+        if (arg.type != "int") {
+            throw std::invalid_argument("Argument " + arg.name + " is not of type int (" + prog_ + ").");
+        }
+        for (const auto& value : getStringValues(arg, true)) {
+            values.push_back(std::stoi(value));
+        }
+        return values;
+    }
+
+//    std::vector<float> ArgumentParser::getFloatValues(const std::string &name) {
+//        std::vector<float> values;
+//        for (const auto& value : getStringValues(name)) {
+//            values.push_back(std::stof(value));
+//        }
+//        return values;
+//    }
+
+    std::vector<float> ArgumentParser::getFloatValues(const ArgumentParser::Argument &arg) {
+        std::vector<float> values;
+        if (arg.type != "float") {
+            throw std::invalid_argument("Argument " + arg.name + " is not of type float (" + prog_ + ").");
+        }
+        for (const auto& value : getStringValues(arg, true)) {
+            values.push_back(std::stof(value));
+        }
+        return values;
+    }
+
+
 } // hive
