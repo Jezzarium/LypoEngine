@@ -113,20 +113,9 @@ namespace hive {
         }
     }
 
-//    bool ArgumentParser::checkArgument(const std::string &name) {
-//        return parsedArguments_.find(name) != parsedArguments_.end();
-//    }
-
     bool ArgumentParser::checkArgument(const ArgumentParser::Argument &arg) {
         return parsedArguments_.find(arg.name) != parsedArguments_.end();
     }
-
-//    std::vector<std::string> ArgumentParser::getStringValues(const std::string &name) {
-//        if (parsedArguments_.find(name) != parsedArguments_.end()) {
-//            return parsedArguments_[name];
-//        }
-//        return {};
-//    }
 
     std::vector<std::string> ArgumentParser::getStringValues(const ArgumentParser::Argument &arg, bool ignoreType) {
         if (parsedArguments_.find(arg.name) != parsedArguments_.end()) {
@@ -139,14 +128,6 @@ namespace hive {
         return {};
     }
 
-//    std::vector<int> ArgumentParser::getIntValues(const std::string &name) {
-//        std::vector<int> values;
-//        for (const auto& value : getStringValues(name)) {
-//            values.push_back(std::stoi(value));
-//        }
-//        return values;
-//    }
-
     std::vector<int> ArgumentParser::getIntValues(const ArgumentParser::Argument &arg) {
         std::vector<int> values;
         if (arg.type != "int") {
@@ -158,14 +139,6 @@ namespace hive {
         return values;
     }
 
-//    std::vector<float> ArgumentParser::getFloatValues(const std::string &name) {
-//        std::vector<float> values;
-//        for (const auto& value : getStringValues(name)) {
-//            values.push_back(std::stof(value));
-//        }
-//        return values;
-//    }
-
     std::vector<float> ArgumentParser::getFloatValues(const ArgumentParser::Argument &arg) {
         std::vector<float> values;
         if (arg.type != "float") {
@@ -176,6 +149,4 @@ namespace hive {
         }
         return values;
     }
-
-
 } // hive

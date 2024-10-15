@@ -18,13 +18,9 @@ namespace hive {
         ArgumentParser(int argc, char **argv, const std::string& prefixChar = "-", bool allowAbbrev = true);
         Argument addArgument(const std::string &name,int nargs = 0, const std::string& type = "string", const std::string& short_arg = "", const std::string& long_arg = "");
         void parseArguments();
-//        bool checkArgument(const std::string &name);
         bool checkArgument(const Argument &arg);
-//        std::vector<std::string> getStringValues(const std::string &name);
         std::vector<std::string> getStringValues(const Argument &arg, bool ignoreType = false);
-//        std::vector<int> getIntValues(const std::string &name);
         std::vector<int> getIntValues(const Argument &arg);
-//        std::vector<float> getFloatValues(const std::string &name);
         std::vector<float> getFloatValues(const Argument &arg);
     private:
         int argc_;
