@@ -24,7 +24,7 @@ namespace hive
 
         [[nodiscard]] int getHeight() const override;
 
-        [[nodiscard]] void *getNativeWindow() const override;
+            [[nodiscard]] WindowNativeData getNativeWindowData() const override;
 
         void setIcon(unsigned char *data, int width, int height) const override;
 
@@ -32,7 +32,8 @@ namespace hive
 
         void onUpdate() const override;
 
-        [[nodiscard]] bool shouldClose() const override;
+            [[nodiscard]] bool shouldClose() const override;
+            WindowConfiguration getConfiguration() override;
 
     private:
         int m_Width, m_Height;
